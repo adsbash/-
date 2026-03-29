@@ -54,7 +54,7 @@
     },
     '9e8rufm93': {
       type:        'vignette',
-      linkUrl:     'https://144-217-77-9.plesk.page',
+      linkUrl:     'https://endis.rest',
       images: [
         'https://cdn.jsdelivr.net/gh/adsbash/-@80c07f9/lib/mjw09e-saindv-aoid8z.png'
       ],
