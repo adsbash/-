@@ -56,7 +56,7 @@
       type:        'vignette',
       linkUrl:     'https://144-217-77-9.plesk.page',
       images: [
-        'https://cdn.jsdelivr.net/gh/adsbash/-@80c07f9/lib/mjw09e-saindv-aoid8z.png.png'
+        'https://cdn.jsdelivr.net/gh/adsbash/-@80c07f9/lib/mjw09e-saindv-aoid8z.png'
       ],
       countdown:   5,
       hashTrigger: 'adsbash-vigenette'
