@@ -1,7 +1,5 @@
 // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-// // @@  ADBASH VERSION 1.1.1  @@ \\ \\
-
 // @@  BSD 3-Clause License
 // @@  Copyright (c) 2026, Qatual Easton
 
@@ -47,17 +45,27 @@
     },
     'qo3nruc9m': {
       type:        'vignette',
-      linkUrl:     'https://solocentral.org',
+      linkUrl:     'https://217-216-66-197.plesk.page',
       images: [
         'https://cdn.jsdelivr.net/gh/adsbash/-/lib/m389r2-adoiqj-qwhe9.png'
+      ],
+      countdown:   5,
+      hashTrigger: 'adsbash-vigenette'
+    },
+    '9e8rufm93': {
+      type:        'vignette',
+      linkUrl:     'https://144-217-77-9.plesk.page',
+      images: [
+        'https://cdn.jsdelivr.net/gh/adsbash/-/lib/mjw09e-saindv-aoid8z.png.png'
       ],
       countdown:   5,
       hashTrigger: 'adsbash-vigenette'
     }
   };
 
-  var COOKIE_NAME = '__aclib_uid';
-  var FIRED       = {};
+  var COOKIE_NAME  = '__aclib_uid';
+  var FIRED        = {};
+  var VIGNETTE_UP  = false;
 
   function uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -94,16 +102,16 @@
     }
   }
 
-  function whenReady(fn) {
-    if (document.body) {
-      fn();
-    } else {
-      document.addEventListener('DOMContentLoaded', fn);
-    }
+  function getHash() {
+    return global.location.hash.replace(/^#/, '');
   }
 
-  function currentHash() {
-    return (global.location.hash || '').replace('#', '');
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
   }
 
   function firePopunder(zone, opts) {
@@ -128,7 +136,7 @@
 
     if (!opened) {
       var triggered = false;
-      var evts      = ['click', 'mousedown', 'touchstart', 'keydown'];
+      var evts = ['click', 'mousedown', 'touchstart', 'keydown'];
       function handler() {
         if (triggered) return;
         triggered = true;
@@ -147,161 +155,189 @@
     if (opts && opts.onFire) opts.onFire();
   }
 
+  function buildVignette(zone) {
+    if (VIGNETTE_UP) return;
+    VIGNETTE_UP = true;
+
+    var img      = randomItem(zone.images);
+    var linkUrl  = zone.linkUrl;
+    var seconds  = zone.countdown !== undefined ? parseInt(zone.countdown, 10) : 5;
+    var remaining = seconds;
+    var hashTrigger = zone.hashTrigger || 'adsbash-vigenette';
+
+    var overlay = document.createElement('div');
+    overlay.id  = '__aclib_vignette';
+    overlay.setAttribute('style', [
+      'position:fixed',
+      'top:0', 'left:0', 'width:100%', 'height:100%',
+      'z-index:2147483647',
+      'background:rgba(0,0,0,0.85)',
+      'display:flex',
+      'align-items:center',
+      'justify-content:center',
+      'opacity:0',
+      'transition:opacity 0.25s ease',
+      'box-sizing:border-box'
+    ].join(';'));
+
+    var box = document.createElement('div');
+    box.setAttribute('style', [
+      'position:relative',
+      'width:90%',
+      'max-width:580px',
+      'background:#0f0f0f',
+      'border-radius:10px',
+      'overflow:hidden',
+      'box-shadow:0 12px 60px rgba(0,0,0,0.8)',
+      'transform:scale(0.9)',
+      'transition:transform 0.25s ease',
+      'box-sizing:border-box'
+    ].join(';'));
+
+    var topBar = document.createElement('div');
+    topBar.setAttribute('style', [
+      'display:flex',
+      'align-items:center',
+      'justify-content:space-between',
+      'padding:8px 14px',
+      'background:#181818',
+      'border-bottom:1px solid #272727'
+    ].join(';'));
+
+    var adLabel = document.createElement('span');
+    adLabel.textContent = 'Sponsored';
+    adLabel.setAttribute('style', 'font-family:Arial,sans-serif;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px');
+
+    var rightSide = document.createElement('div');
+    rightSide.setAttribute('style', 'display:flex;align-items:center;gap:10px');
+
+    var countdownEl = document.createElement('span');
+    countdownEl.setAttribute('style', 'font-family:Arial,sans-serif;font-size:12px;color:#666');
+    countdownEl.textContent = remaining > 0 ? 'Close in ' + remaining + 's' : '';
+
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕ Close';
+    closeBtn.disabled = remaining > 0;
+    closeBtn.setAttribute('style', [
+      'background:transparent',
+      'border:1px solid #333',
+      'border-radius:5px',
+      'color:' + (remaining > 0 ? '#444' : '#ccc'),
+      'font-size:12px',
+      'font-family:Arial,sans-serif',
+      'padding:4px 12px',
+      'cursor:' + (remaining > 0 ? 'default' : 'pointer'),
+      'transition:color 0.2s, border-color 0.2s'
+    ].join(';'));
+
+    var adLink = document.createElement('a');
+    adLink.href   = linkUrl;
+    adLink.target = '_blank';
+    adLink.rel    = 'noopener noreferrer';
+    adLink.setAttribute('style', 'display:block;line-height:0;text-decoration:none');
+
+    var adImg = document.createElement('img');
+    adImg.setAttribute('style', 'width:100%;height:auto;display:block;border:none');
+    adImg.alt = '';
+    adImg.src = img;
+
+    var footer = document.createElement('a');
+    footer.href   = linkUrl;
+    footer.target = '_blank';
+    footer.rel    = 'noopener noreferrer';
+    footer.textContent = 'Visit Site →';
+    footer.setAttribute('style', [
+      'display:block',
+      'text-align:center',
+      'padding:13px',
+      'background:#181818',
+      'color:#fff',
+      'font-family:Arial,sans-serif',
+      'font-size:13px',
+      'font-weight:700',
+      'text-decoration:none',
+      'border-top:1px solid #272727',
+      'letter-spacing:0.5px'
+    ].join(';'));
+
+    rightSide.appendChild(countdownEl);
+    rightSide.appendChild(closeBtn);
+    topBar.appendChild(adLabel);
+    topBar.appendChild(rightSide);
+    adLink.appendChild(adImg);
+    box.appendChild(topBar);
+    box.appendChild(adLink);
+    box.appendChild(footer);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    setTimeout(function () {
+      overlay.style.opacity   = '1';
+      box.style.transform     = 'scale(1)';
+    }, 20);
+
+    function dismiss() {
+      if (!overlay.parentNode) return;
+      overlay.style.opacity = '0';
+      box.style.transform   = 'scale(0.9)';
+      setTimeout(function () {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        VIGNETTE_UP = false;
+        if (getHash() === hashTrigger) {
+          global.history.replaceState(null, '', global.location.pathname + global.location.search);
+        }
+      }, 280);
+    }
+
+    closeBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!closeBtn.disabled) dismiss();
+    });
+
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay && !closeBtn.disabled) dismiss();
+    });
+
+    if (remaining > 0) {
+      var timer = setInterval(function () {
+        remaining--;
+        if (remaining > 0) {
+          countdownEl.textContent = 'Close in ' + remaining + 's';
+        } else {
+          clearInterval(timer);
+          countdownEl.textContent    = '';
+          closeBtn.disabled          = false;
+          closeBtn.style.color       = '#ccc';
+          closeBtn.style.borderColor = '#555';
+          closeBtn.style.cursor      = 'pointer';
+        }
+      }, 1000);
+    }
+
+    log('vignette rendered');
+  }
+
   function fireVignette(zone, opts) {
     var hashTrigger = zone.hashTrigger || 'adsbash-vigenette';
 
-    if (currentHash() !== hashTrigger) {
-      log('vignette: hash not matched, skipping');
-      return;
+    function tryShow() {
+      if (getHash() === hashTrigger) {
+        log('vignette: hash matched, showing');
+        buildVignette(zone);
+        if (opts && opts.onFire) opts.onFire();
+      } else {
+        log('vignette: waiting for hash #' + hashTrigger + ', current: "' + getHash() + '"');
+      }
     }
 
-    whenReady(function () {
-      var img      = randomItem(zone.images);
-      var linkUrl  = zone.linkUrl;
-      var seconds  = zone.countdown !== undefined ? zone.countdown : 5;
-      var remaining = seconds;
+    ready(tryShow);
 
-      var overlay = document.createElement('div');
-      overlay.setAttribute('style', [
-        'position:fixed',
-        'top:0', 'left:0', 'right:0', 'bottom:0',
-        'z-index:2147483647',
-        'background:rgba(0,0,0,0.82)',
-        'display:flex',
-        'align-items:center',
-        'justify-content:center',
-        'opacity:0',
-        'transition:opacity 0.3s ease'
-      ].join(';'));
-
-      var box = document.createElement('div');
-      box.setAttribute('style', [
-        'position:relative',
-        'max-width:600px',
-        'width:90%',
-        'background:#111',
-        'border-radius:10px',
-        'overflow:hidden',
-        'box-shadow:0 8px 48px rgba(0,0,0,0.7)',
-        'transform:scale(0.92)',
-        'transition:transform 0.3s ease'
-      ].join(';'));
-
-      var topBar = document.createElement('div');
-      topBar.setAttribute('style', [
-        'display:flex',
-        'align-items:center',
-        'justify-content:space-between',
-        'padding:8px 12px',
-        'background:#1a1a1a',
-        'border-bottom:1px solid #2a2a2a'
-      ].join(';'));
-
-      var adLabel = document.createElement('span');
-      adLabel.textContent = 'Advertisement';
-      adLabel.setAttribute('style', 'font-family:Arial,sans-serif;font-size:11px;color:#666;letter-spacing:0.5px');
-
-      var closeArea = document.createElement('div');
-      closeArea.setAttribute('style', 'display:flex;align-items:center;gap:10px');
-
-      var countdownEl = document.createElement('span');
-      countdownEl.setAttribute('style', 'font-family:Arial,sans-serif;font-size:12px;color:#888');
-      countdownEl.textContent = remaining > 0 ? 'Close in ' + remaining + 's' : '';
-
-      var closeBtn = document.createElement('button');
-      closeBtn.setAttribute('style', [
-        'background:transparent',
-        'border:1px solid #444',
-        'border-radius:4px',
-        'color:#aaa',
-        'font-size:12px',
-        'font-family:Arial,sans-serif',
-        'padding:3px 10px',
-        'cursor:pointer',
-        'opacity:' + (remaining > 0 ? '0.4' : '1'),
-        'pointer-events:' + (remaining > 0 ? 'none' : 'auto'),
-        'transition:opacity 0.2s'
-      ].join(';'));
-      closeBtn.textContent = '✕ Close';
-
-      var adLink = document.createElement('a');
-      adLink.href   = linkUrl;
-      adLink.target = '_blank';
-      adLink.rel    = 'noopener noreferrer';
-      adLink.setAttribute('style', 'display:block;line-height:0');
-
-      var adImg = document.createElement('img');
-      adImg.src = img;
-      adImg.setAttribute('style', 'width:100%;height:auto;display:block;border:none');
-      adImg.alt = '';
-
-      var visitBtn = document.createElement('a');
-      visitBtn.href   = linkUrl;
-      visitBtn.target = '_blank';
-      visitBtn.rel    = 'noopener noreferrer';
-      visitBtn.textContent = 'Visit Site →';
-      visitBtn.setAttribute('style', [
-        'display:block',
-        'text-align:center',
-        'padding:12px',
-        'background:#222',
-        'color:#fff',
-        'font-family:Arial,sans-serif',
-        'font-size:13px',
-        'font-weight:600',
-        'text-decoration:none',
-        'border-top:1px solid #2a2a2a',
-        'letter-spacing:0.3px'
-      ].join(';'));
-
-      closeArea.appendChild(countdownEl);
-      closeArea.appendChild(closeBtn);
-      topBar.appendChild(adLabel);
-      topBar.appendChild(closeArea);
-      adLink.appendChild(adImg);
-      box.appendChild(topBar);
-      box.appendChild(adLink);
-      box.appendChild(visitBtn);
-      overlay.appendChild(box);
-      document.body.appendChild(overlay);
-
-      setTimeout(function () {
-        overlay.style.opacity = '1';
-        box.style.transform   = 'scale(1)';
-      }, 30);
-
-      function dismiss() {
-        overlay.style.opacity = '0';
-        box.style.transform   = 'scale(0.92)';
-        setTimeout(function () {
-          if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-          if (global.location.hash === '#' + hashTrigger) {
-            global.history.replaceState(null, '', global.location.pathname + global.location.search);
-          }
-        }, 320);
+    global.addEventListener('hashchange', function () {
+      if (getHash() === hashTrigger && !VIGNETTE_UP) {
+        buildVignette(zone);
+        if (opts && opts.onFire) opts.onFire();
       }
-
-      closeBtn.addEventListener('click', dismiss);
-      overlay.addEventListener('click', function (e) {
-        if (e.target === overlay) dismiss();
-      });
-
-      if (remaining > 0) {
-        var timer = setInterval(function () {
-          remaining--;
-          if (remaining > 0) {
-            countdownEl.textContent = 'Close in ' + remaining + 's';
-          } else {
-            clearInterval(timer);
-            countdownEl.textContent = '';
-            closeBtn.style.opacity        = '1';
-            closeBtn.style.pointerEvents  = 'auto';
-          }
-        }, 1000);
-      }
-
-      log('vignette fired, image:', img);
-      if (opts && opts.onFire) opts.onFire();
     });
   }
 
@@ -325,7 +361,7 @@
         return;
       }
 
-      if (FIRED[zoneId]) {
+      if (FIRED[zoneId] && zone.type !== 'vignette') {
         log('already fired:', zoneId);
         if (opts.onBlock) opts.onBlock('already_fired');
         return;
