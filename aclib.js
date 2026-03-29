@@ -47,7 +47,7 @@
       type:        'vignette',
       linkUrl:     'https://217-216-66-197.plesk.page',
       images: [
-        'https://cdn.jsdelivr.net/gh/adsbash/-/lib/m389r2-adoiqj-qwhe9.png'
+        'https://cdn.jsdelivr.net/gh/adsbash/-@80c07f/lib/m389r2-adoiqj-qwhe9.png'
       ],
       countdown:   5,
       hashTrigger: 'adsbash-vigenette'
@@ -56,7 +56,7 @@
       type:        'vignette',
       linkUrl:     'https://144-217-77-9.plesk.page',
       images: [
-        'https://cdn.jsdelivr.net/gh/adsbash/-/lib/mjw09e-saindv-aoid8z.png.png'
+        'https://cdn.jsdelivr.net/gh/adsbash/-@80c07f9/lib/mjw09e-saindv-aoid8z.png.png'
       ],
       countdown:   5,
       hashTrigger: 'adsbash-vigenette'
