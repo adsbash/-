@@ -205,8 +205,8 @@
     ].join(';'));
 
     var adLabel = document.createElement('span');
-    adLabel.textContent = 'Sponsored';
-    adLabel.setAttribute('style', 'font-family:Arial,sans-serif;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px');
+    adLabel.textContent = 'Partners';
+    adLabel.setAttribute('style', 'font-family:Arial,sans-serif;font-size:11px;color:#555;letter-spacing:1px');
 
     var rightSide = document.createElement('div');
     rightSide.setAttribute('style', 'display:flex;align-items:center;gap:10px');
